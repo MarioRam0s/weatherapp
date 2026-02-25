@@ -1,18 +1,33 @@
 <div class="input-group">
-  <input type="number" class="form-control" placeholder="Buscar ubicación por código postal" />
-  <button class="btn btn-outline-primary" type="button">Buscar</button>
+  <input
+    #postalCode
+    type="number"
+    class="form-control"
+    placeholder="Buscar ubicación por código postal"
+  />
+  <button
+    class="btn btn-outline-primary"
+    (click)="searchUbicationByPostalCode(+postalCode.value)"
+    type="button"
+  >
+    Buscar
+  </button>
 </div>
 
-<div class="card my-5" style="width: 30rem">
-  <div class="card-body">
-    <h5 class="card-title">Ubicación</h5>
-    <h6 class="card-subtitle mb-2 text-body-secondary">Miami - 11202</h6>
-    <p class="card-text">Latitud: 10.6986456 - Longitud: -54185740541</p>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-success" (click)="openModal()">Agregar</button>
+@if (ubication()) {
+  <div class="card my-5" style="width: 30rem">
+    <div class="card-body">
+      <h5 class="card-title">Ubicación</h5>
+      <h6 class="card-subtitle mb-2 text-body-secondary">
+        {{ ubication()?.placeName }} - {{ ubication()?.postalcode }}
+      </h6>
+      <p class="card-text">Latitud: {{ ubication()?.lat }} - Longitud: {{ ubication()?.lng }}</p>
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-success" (click)="openModal()">Agregar</button>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <shared-tabmenu>
   <div tab-content class="mt-5 d-flex justify-content-center">
@@ -41,16 +56,20 @@
   </div>
 </shared-tabmenu>
 
-<shared-modal #alertModal [dataModal]="dataModalAdd" (eventConfirm)="addUbication()"></shared-modal>
-
 <shared-modal
   #alertModal
-  [dataModal]="dataModalConfirm"
-  (eventConfirm)="addUbication()"
+  [dataModal]="dataModalAdd"
+  (eventConfirm)="addUbication(ubication()!.postalcode)"
 ></shared-modal>
 
 <shared-modal
-  #alertModal
+  #alertModaldds
+  [dataModal]="dataModalConfirm"
+  (eventConfirm)="addUbication(ubication()!.postalcode)"
+></shared-modal>
+
+<shared-modal
+  #alertModaldsdd
   [dataModal]="dataModalError"
-  (eventConfirm)="addUbication()"
+  (eventConfirm)="addUbication(4)"
 ></shared-modal>

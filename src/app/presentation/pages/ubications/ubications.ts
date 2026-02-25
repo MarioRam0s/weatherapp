@@ -1,6 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { Tabmenu } from '../../shared/tabmenu/tabmenu';
 import { ModalAlert } from '../../shared/modalAlert/modalAlert';
+import { PostalCodeUseCase } from '../../../aplication/use-cases/postalCode.useCase';
+import { PostalCode } from '../../../domain/entities/postalCode.entity';
+import { WeatherUseCase } from '../../../aplication/use-cases/weather.useCase';
 
 export interface DataModal {
   title: string;
@@ -16,6 +19,11 @@ export interface DataModal {
   styleUrl: './ubications.css',
 })
 export class Ubications {
+  private servicePostalCode = inject(PostalCodeUseCase);
+  private serviceWeather = inject(WeatherUseCase);
+
+  ubication = signal<PostalCode | null>(null);
+
   @ViewChild('alertModal') alertModal!: ModalAlert;
 
   dataModalAdd: DataModal = {
@@ -39,7 +47,33 @@ export class Ubications {
     this.alertModal.open();
   }
 
-  addUbication() {
-    console.log('agregando ubicacion');
+  addUbication(postalCode: number) {
+    this.serviceWeather.getCurrentWeatherByPostalCode(postalCode).subscribe({
+      next: (response) => {
+        console.log(response);
+      },
+      error: (err) => {
+        console.error('Error:', err);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      },
+    });
+  }
+
+  searchUbicationByPostalCode(postalCode: number) {
+    console.log(postalCode);
+    this.servicePostalCode.getUbicationByPostalCode(postalCode).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.ubication.set(response);
+      },
+      error: (err) => {
+        console.error('Error:', err);
+      },
+      complete: () => {
+        console.log('Petición completada');
+      },
+    });
   }
 }
