@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { WeatherRepository } from '../../domain/repositories/weather.repository';
 import { Observable, tap } from 'rxjs';
 import { CurrentWeather } from '../../domain/entities/weather.entity';
@@ -19,5 +19,9 @@ export class WeatherUseCase {
 
   getAllCurrentWeather() {
     return this.weatherRepository.getAllCurrentWeather();
+  }
+
+  deleteWeather(postalCode: number) {
+    return this.weatherRepository.deleteWeather(postalCode);
   }
 }

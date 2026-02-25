@@ -1,9 +1,10 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, signal, ViewChild, effect } from '@angular/core';
 import { Tabmenu } from '../../shared/tabmenu/tabmenu';
 import { ModalAlert } from '../../shared/modalAlert/modalAlert';
 import { PostalCodeUseCase } from '../../../aplication/use-cases/postalCode.useCase';
 import { PostalCode } from '../../../domain/entities/postalCode.entity';
 import { WeatherUseCase } from '../../../aplication/use-cases/weather.useCase';
+import { CurrentWeather } from '../../../domain/entities/weather.entity';
 
 export interface DataModal {
   title: string;
@@ -24,7 +25,17 @@ export class Ubications {
 
   ubication = signal<PostalCode | null>(null);
 
+  currentWeatherList = computed(() => Object.values(this.serviceWeather.getAllCurrentWeather()()));
+
+  currentWeather = signal<CurrentWeather | null>(null);
+
   @ViewChild('alertModal') alertModal!: ModalAlert;
+
+  private logEffect = effect(() => {
+    if (Object.values(this.serviceWeather.getAllCurrentWeather()()).length == 1) {
+      this.currentWeather.set(Object.values(this.serviceWeather.getAllCurrentWeather()())[0]);
+    }
+  });
 
   dataModalAdd: DataModal = {
     title: '¡Aviso!',
@@ -62,10 +73,8 @@ export class Ubications {
   }
 
   searchUbicationByPostalCode(postalCode: number) {
-    console.log(postalCode);
     this.servicePostalCode.getUbicationByPostalCode(postalCode).subscribe({
       next: (response) => {
-        console.log(response);
         this.ubication.set(response);
       },
       error: (err) => {
@@ -75,5 +84,9 @@ export class Ubications {
         console.log('Petición completada');
       },
     });
+  }
+
+  weatherActual(weather: CurrentWeather) {
+    this.currentWeather.set(weather);
   }
 }

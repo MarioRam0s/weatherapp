@@ -10,6 +10,7 @@ export interface CurrentWeather {
   country_code: string;
   lat: number;
   lon: number;
+  postalCode?: number;
 }
 
 export interface Weather {

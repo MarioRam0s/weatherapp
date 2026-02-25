@@ -1,5 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, input, output, signal, ViewChild } from '@angular/core';
 import { ModalAlert } from '../modalAlert/modalAlert';
+import { WeatherUseCase } from '../../../aplication/use-cases/weather.useCase';
+import { CurrentWeather } from '../../../domain/entities/weather.entity';
 
 export interface DataModal {
   title: string;
@@ -15,6 +17,13 @@ export interface DataModal {
 })
 export class Tabmenu {
   @ViewChild('tabModal') tabModal!: ModalAlert;
+  currentWeatherUsecase = inject(WeatherUseCase);
+
+  currrentWeatherList = input.required<CurrentWeather[]>();
+
+  activeTabIndex = signal<number>(0);
+
+  weatherActual = output<CurrentWeather>();
 
   dataModalDelete: DataModal = {
     title: '¡Aviso!',
@@ -28,6 +37,10 @@ export class Tabmenu {
   }
 
   deleteUbication(): void {
-    console.log('Eliminando ubicación');
+    this.currentWeatherUsecase.deleteWeather(this.activeTabIndex());
+  }
+
+  selectWeather(weather: CurrentWeather) {
+    this.weatherActual.emit(weather);
   }
 }

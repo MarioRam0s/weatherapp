@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { WeatherRepository } from '../../domain/repositories/weather.repository';
 import { map, Observable, tap } from 'rxjs';
 import { CurrentWeather } from '../../domain/entities/weather.entity';
@@ -10,7 +10,6 @@ export class WeatherRepositoryImpl implements WeatherRepository {
   datasourceWeather = inject(WeatherDatasource);
 
   currentWeathers = signal<Record<string, CurrentWeather>>({});
-  currentWeathersKeys = computed(() => Object.keys(this.currentWeathers()));
 
   getCurrentWeatherByPostalCode(postalCode: number): Observable<CurrentWeather> {
     return this.datasourceWeather.getCurrentWeatherByPostalCode(postalCode).pipe(
@@ -18,7 +17,7 @@ export class WeatherRepositoryImpl implements WeatherRepository {
       tap((item) => {
         this.currentWeathers.update((history) => ({
           ...history,
-          [item.state_code]: item,
+          [postalCode]: { ...item, postalCode: postalCode },
         }));
       }),
     );
@@ -28,7 +27,15 @@ export class WeatherRepositoryImpl implements WeatherRepository {
     throw new Error('Method not implemented.');
   }
 
-  getAllCurrentWeather(): Record<number, CurrentWeather> {
-    return this.currentWeathers();
+  getAllCurrentWeather(): Signal<Record<string, CurrentWeather>> {
+    return this.currentWeathers;
+  }
+
+  deleteWeather(postalCode: number): void {
+    this.currentWeathers.update((history) => {
+      const { [postalCode]: deleteItem, ...rest } = history;
+      console.log({ ...rest });
+      return { ...rest };
+    });
   }
 }
