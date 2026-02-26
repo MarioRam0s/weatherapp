@@ -9,4 +9,6 @@ export abstract class WeatherRepository {
   abstract getAllCurrentWeather(): Signal<Record<string, CurrentWeather>>;
   abstract getAllWeatherForecast(): Signal<Record<string, WeatherForecast>>;
   abstract deleteWeather(postalCode: number): void;
+  abstract setHourExpiredWeather(hour: number): void;
+  abstract getHourExpiredWeather(): number;
 }

@@ -26,4 +26,12 @@ export class WeatherUseCase {
   deleteWeather(postalCode: number) {
     return this.weatherRepository.deleteWeather(postalCode);
   }
+
+  setHourExpired(hour: number) {
+    return this.weatherRepository.setHourExpiredWeather(hour);
+  }
+
+  getHourExpiredWeather(): number {
+    return this.weatherRepository.getHourExpiredWeather();
+  }
 }

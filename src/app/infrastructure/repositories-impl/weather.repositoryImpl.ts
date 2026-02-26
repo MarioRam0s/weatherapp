@@ -5,6 +5,7 @@ import { CurrentWeather, WeatherForecast } from '../../domain/entities/weather.e
 import { WeatherDatasource } from '../datasources/weather.datasource';
 import { WeatherMapper } from '../mappers/weather.mapper';
 import { LocalStoragService } from '../storage/localstorage.service';
+import { CONSTANSTKEYS } from '../constants/constantsKey';
 
 @Injectable({ providedIn: 'root' })
 export class WeatherRepositoryImpl implements WeatherRepository {
@@ -15,19 +16,26 @@ export class WeatherRepositoryImpl implements WeatherRepository {
 
   weatherForecast = signal<Record<string, WeatherForecast>>({});
 
+  hourExpired = signal<number>(2);
+
   constructor() {
     this.loadDataLocalStorage();
   }
 
   loadDataLocalStorage() {
-    const weatherStorage = this.localStorageService.getItem('currentWeathers');
-    const forecastStorage = this.localStorageService.getItem('weatherForecast');
+    const weatherStorage = this.localStorageService.getItem(CONSTANSTKEYS.CURRENTWEATHERS);
+    const forecastStorage = this.localStorageService.getItem(CONSTANSTKEYS.WEATHERFORECAST);
+
+    const hourExpiredStorage = this.localStorageService.getItem(CONSTANSTKEYS.HOUREXPIRED);
 
     if (weatherStorage) {
       this.currentWeathers.set(weatherStorage as Record<string, CurrentWeather>);
     }
     if (forecastStorage) {
       this.weatherForecast.set(forecastStorage as Record<string, WeatherForecast>);
+    }
+    if (hourExpiredStorage) {
+      this.hourExpired.set(hourExpiredStorage as number);
     }
   }
 
@@ -39,7 +47,11 @@ export class WeatherRepositoryImpl implements WeatherRepository {
           ...history,
           [postalCode]: { ...item, postalCode: postalCode },
         }));
-        this.localStorageService.setItem('currentWeathers', this.currentWeathers());
+        this.localStorageService.setItem(
+          CONSTANSTKEYS.CURRENTWEATHERS,
+          this.currentWeathers(),
+          this.hourExpired(),
+        );
       }),
     );
   }
@@ -56,7 +68,11 @@ export class WeatherRepositoryImpl implements WeatherRepository {
           [postalCode]: { ...item, postalCode: postalCode },
         }));
 
-        this.localStorageService.setItem('weatherForecast', this.weatherForecast());
+        this.localStorageService.setItem(
+          CONSTANSTKEYS.WEATHERFORECAST,
+          this.weatherForecast(),
+          this.hourExpired(),
+        );
       }),
     );
   }
@@ -74,6 +90,18 @@ export class WeatherRepositoryImpl implements WeatherRepository {
       const { [postalCode]: deleteItem, ...rest } = history;
       return { ...rest };
     });
-    this.localStorageService.setItem('currentWeathers', this.currentWeathers());
+    this.localStorageService.setItem(
+      CONSTANSTKEYS.CURRENTWEATHERS,
+      this.currentWeathers(),
+      this.hourExpired(),
+    );
+  }
+
+  setHourExpiredWeather(hour: number) {
+    this.localStorageService.setItem(CONSTANSTKEYS.HOUREXPIRED, hour, hour);
+  }
+
+  getHourExpiredWeather(): number {
+    return this.hourExpired();
   }
 }
