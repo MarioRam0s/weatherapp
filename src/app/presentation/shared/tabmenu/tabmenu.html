@@ -1,0 +1,34 @@
+<div class="overflow-auto mt-5">
+  <ul class="nav nav-tabs">
+    @for (item of currrentWeatherList(); track item.postalCode) {
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="activeTabIndex() === $index"
+          [class.bg-primary]="activeTabIndex() === $index"
+          [class.text-white]="activeTabIndex() === $index"
+          [class.text-black]="activeTabIndex() !== $index"
+          (click)="activeTabIndex.set($index)"
+          (click)="selectWeather(item)"
+          ><span class="mx-3">{{ item.city_name }} - {{ item.postalCode }}</span>
+          <button
+            type="button"
+            (click)="openModalTab(item.postalCode!); $event.stopPropagation()"
+            class="btn-close btn-close-black"
+            aria-label="Close"
+          ></button
+        ></a>
+      </li>
+    }
+  </ul>
+
+  <div class="tab-content">
+    <ng-content></ng-content>
+  </div>
+</div>
+
+<shared-modal
+  #tabModal
+  [dataModal]="dataModalDelete"
+  (eventConfirm)="deleteUbication()"
+></shared-modal>
