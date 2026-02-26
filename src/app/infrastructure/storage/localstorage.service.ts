@@ -2,14 +2,31 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class LocalStoragService {
-  setItem<T>(key: string, value: T): void {
-    const data = JSON.stringify(value);
+  setItem<T>(key: string, value: T, hours: number): void {
+    const now = new Date().getTime();
+
+    const item = {
+      value: value,
+      expired: now + hours * 60 * 60 * 1000,
+    };
+    const data = JSON.stringify(item);
     localStorage.setItem(key, data);
   }
 
   getItem<T>(key: string): T | null {
     const data = localStorage.getItem(key);
-    return data ? (JSON.parse(data) as T) : null;
+
+    if (!data) return null;
+
+    const item = JSON.parse(data);
+    const now = new Date().getTime();
+
+    if (now > item.expired) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return data ? (JSON.parse(data).value as T) : null;
   }
 
   removeItem(key: string): void {

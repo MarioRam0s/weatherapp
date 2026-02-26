@@ -32,7 +32,12 @@ export class Ubications {
 
   showAlert = signal<boolean>(false);
 
-  infoAlertModal = signal<DataModal | null>(null);
+  hourExpired = signal<number>(this.serviceWeather.getHourExpiredWeather());
+
+  infoAlertModal = signal<DataModal | null>({
+    title: '',
+    description: '',
+  });
 
   @ViewChild('addModal') addModal!: ModalAlert;
   @ViewChild('alertModal') alertModal!: ModalAlert;
@@ -71,16 +76,7 @@ export class Ubications {
     showButtom: true,
   };
 
-  dataModalError: DataModal = {
-    title: 'Error!',
-    description: 'Ocurrio un error inesperado',
-  };
-
-  openModal() {
-    this.addModal.open();
-  }
-
-  addUbication(postalCode: number) {
+  openModal(postalCode: number) {
     if (this.currentWeatherList().find((item) => item.postalCode === postalCode)) {
       this.showAlert.set(true);
       setTimeout(() => {
@@ -88,11 +84,15 @@ export class Ubications {
       }, 2000);
       return;
     }
+    this.addModal.open();
+  }
+
+  addUbication(postalCode: number) {
     this.serviceWeather.getCurrentWeatherByPostalCode(postalCode).subscribe({
       error: (err) => {
         this.infoAlertModal.set({
           title: '¡Error!',
-          description: err,
+          description: err.error.error,
         });
         this.alertModal.open();
       },
@@ -114,7 +114,7 @@ export class Ubications {
       error: (err) => {
         this.infoAlertModal.set({
           title: '¡Error!',
-          description: err,
+          description: err.error.error,
         });
         this.alertModal.open();
       },
@@ -123,6 +123,12 @@ export class Ubications {
           this.infoAlertModal.set({
             title: '¡Sin datos!',
             description: `No se encontro informacion con el código postal ${postalCode}`,
+          });
+          this.alertModal.open();
+        } else {
+          this.infoAlertModal.set({
+            title: '¡Listo!',
+            description: 'Petición realizada con exito',
           });
           this.alertModal.open();
         }
@@ -136,5 +142,14 @@ export class Ubications {
 
   redirectToForecast() {
     this.routerService.navigate(['/forecast', this.currentWeather()?.postalCode]);
+  }
+
+  setHourExpiredWeather(hour: number) {
+    this.serviceWeather.setHourExpired(hour);
+    this.infoAlertModal.set({
+      title: '¡Listo!',
+      description: 'Se actualizó la hora de expiración del cache',
+    });
+    this.alertModal.open();
   }
 }

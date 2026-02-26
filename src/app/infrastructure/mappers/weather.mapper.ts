@@ -29,8 +29,8 @@ export class WeatherMapper {
         temp: item.temp,
         rh: item.rh,
         weather: item.weather,
-        sunrise_ts: item.sunrise_ts,
-        sunset_ts: item.sunset_ts,
+        sunrise_ts: new Date(item.sunrise_ts * 1000),
+        sunset_ts: new Date(item.sunset_ts * 1000),
       })),
     };
   }
