@@ -15,6 +15,9 @@
       <div tab-content class="d-flex justify-content-center">
         <div class="card m-3">
           <div class="card-body">
+            <div class="text-center">
+              <img [src]="'assets/weather/' + item.weather!.icon + '.png'" />
+            </div>
             <h5 class="card-title">Condiciones el {{ item.valid_date }}</h5>
             <h6>{{ item.weather!.description }}</h6>
           </div>
