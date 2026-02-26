@@ -9,7 +9,7 @@ export class PostalCodeDatasource {
 
   getUbicationByPostalCode(postalCode: number): Observable<PostalCode | null> {
     return this.http.get<PostalCode>(
-      `http://api.geonames.org/postalCodeLookupJSON?postalcode=${postalCode}&country=US&username=lorddev`,
+      `https://api.geonames.org/postalCodeLookupJSON?postalcode=${postalCode}&country=US&username=lorddev`,
     );
   }
 }
