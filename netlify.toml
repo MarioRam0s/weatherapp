@@ -1,0 +1,6 @@
+[build]
+  command = "ng build"
+  publish = "dist/weatherapp/browser"
+
+[functions]
+  directory = "netlify/functions"
