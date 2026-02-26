@@ -1,59 +1,61 @@
-# Weatherapp
+# Weather App - Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+Aplicación web desarrollada en **Angular** como prueba técnica para una vacante de desarrollador **Frontend Angular**.
 
-## Development server
+La aplicación permite consultar el clima actual y el pronóstico de 5 días mediante código postal, utilizando APIs externas y aplicando buenas prácticas de arquitectura, separación de responsabilidades y manejo de estado.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## Tecnologías Utilizadas
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Angular
+- TypeScript
+- Bootstrap (única librería UI utilizada)
+- RxJS
+- Angular Signals
+- LocalStorage
+- Arquitectura basada en Clean Architecture
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## APIs Utilizadas
 
-```bash
-ng generate component component-name
-```
+- Weatherbit API  
+  https://www.weatherbit.io/api
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- GeoNames API  
+  https://www.geonames.org/
 
-```bash
-ng generate --help
-```
+---
 
-## Building
+## Arquitectura del Proyecto
 
-To build the project run:
+El proyecto sigue una estructura inspirada en Clean Architecture:
 
-```bash
-ng build
-```
+### Principios aplicados
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- Separación clara de responsabilidades
+- Repositorios definidos como abstracciones en el dominio
+- Implementaciones concretas en infraestructura
+- Mappers para desacoplar el modelo del API externo
+- Manejo de caché con tiempo de expiración configurable
+- Uso de Signals para manejo de estado reactivo
 
-## Running unit tests
+---
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Funcionalidades
 
-```bash
-ng test
-```
+- Consulta de clima actual por código postal
+- Consulta de pronóstico de 5 días
+- Manejo de caché en LocalStorage con expiración dinámica
+- Validación para evitar peticiones HTTP innecesarias
+- Interfaz completamente responsiva con Bootstrap
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## Intalación
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+git clone https://github.com/MarioRam0s/weatherapp.git
+npm install
+ng serve -o
+ng build --configuration production
