@@ -1,7 +1,7 @@
 exports.handler = async function (event) {
-  const { postalcode, country } = event.queryStringParameters;
+  const { postalcode } = event.queryStringParameters;
 
-  const url = `http://api.geonames.org/postalCodeLookupJSON?postalcode=${postalcode}&country=${country}&username=lorddev`;
+  const url = `http://api.geonames.org/postalCodeLookupJSON?postalcode=${postalcode}&country=US&username=lorddev`;
 
   try {
     const response = await fetch(url);
