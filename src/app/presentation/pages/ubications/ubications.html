@@ -40,13 +40,14 @@
     <div class="alert alert-primary" role="alert">La ubicación ya esta agregada</div>
   }
 
-  <div class="card mb-5" style="width: 30rem">
+  <div class="card w-50 mb-5">
     <div class="card-body">
       <h5 class="card-title">Ubicación</h5>
       <h6 class="card-subtitle mb-2 text-body-primary">
         {{ ubication()?.placeName }} - {{ ubication()?.postalcode }}
       </h6>
-      <p class="card-text">Latitud: {{ ubication()?.lat }} - Longitud: {{ ubication()?.lng }}</p>
+      <p class="card-text">Latitud: {{ ubication()?.lat }}</p>
+      <p class="card-text">Longitud: {{ ubication()?.lng }}</p>
       <div class="d-flex justify-content-end">
         <button class="btn btn-success" (click)="openModal(ubication()!.postalcode)">
           Agregar
