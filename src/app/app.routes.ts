@@ -12,7 +12,7 @@ export const routes: Routes = [
       import('./presentation/pages/ubications/ubications').then((c) => c.Ubications),
   },
   {
-    path: 'forecast',
+    path: 'forecast/:stateCode',
     loadComponent: () => import('./presentation/pages/forecast/forecast').then((c) => c.Forecast),
   },
   {

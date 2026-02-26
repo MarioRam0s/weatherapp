@@ -21,7 +21,8 @@ export class Tabmenu {
 
   currrentWeatherList = input.required<CurrentWeather[]>();
 
-  activeTabIndex = signal<number>(0);
+  activeTabIndex = signal<number | null>(0);
+  postalCodeDelete = signal<number | null>(null);
 
   weatherActual = output<CurrentWeather>();
 
@@ -32,12 +33,15 @@ export class Tabmenu {
     showButtom: true,
   };
 
-  openModalTab(): void {
+  openModalTab(postalCode: number): void {
+    this.postalCodeDelete.set(postalCode);
     this.tabModal.open();
   }
 
   deleteUbication(): void {
-    this.currentWeatherUsecase.deleteWeather(this.activeTabIndex());
+    this.currentWeatherUsecase.deleteWeather(this.postalCodeDelete()!);
+    this.postalCodeDelete.set(null);
+    this.activeTabIndex.set(null);
   }
 
   selectWeather(weather: CurrentWeather) {

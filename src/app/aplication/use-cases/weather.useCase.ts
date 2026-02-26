@@ -1,24 +1,26 @@
 import { inject, Injectable } from '@angular/core';
 import { WeatherRepository } from '../../domain/repositories/weather.repository';
-import { Observable, tap } from 'rxjs';
-import { CurrentWeather } from '../../domain/entities/weather.entity';
-import { LocalStoragService } from '../../infrastructure/storage/localstorage.service';
+import { Observable } from 'rxjs';
+import { CurrentWeather, WeatherForecast } from '../../domain/entities/weather.entity';
 
 @Injectable({ providedIn: 'root' })
 export class WeatherUseCase {
   weatherRepository = inject(WeatherRepository);
-  localStorage = inject(LocalStoragService);
 
   getCurrentWeatherByPostalCode(postalCode: number): Observable<CurrentWeather> {
-    return this.weatherRepository.getCurrentWeatherByPostalCode(postalCode).pipe(
-      tap((response) => {
-        this.localStorage.setItem('currentWeather', response);
-      }),
-    );
+    return this.weatherRepository.getCurrentWeatherByPostalCode(postalCode);
+  }
+
+  getWeatherForecastByPostalCode(postalCode: number): Observable<WeatherForecast> {
+    return this.weatherRepository.getWeatherForecastByPostalCode(postalCode);
   }
 
   getAllCurrentWeather() {
     return this.weatherRepository.getAllCurrentWeather();
+  }
+
+  getAllWeatherForecast() {
+    return this.weatherRepository.getAllWeatherForecast();
   }
 
   deleteWeather(postalCode: number) {

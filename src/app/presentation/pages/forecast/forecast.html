@@ -1,1 +1,23 @@
-<p>forecast works!</p>
+<h2>
+  {{ this.weatherForecast()?.country_code }} {{ this.weatherForecast()?.city_name }} -
+  {{ this.weatherForecast()?.postalCode }}
+</h2>
+<b>Latitud: {{ this.weatherForecast()?.lat }} , Longitud: {{ this.weatherForecast()?.lon }}</b>
+<div class="d-flex flex-wrap justify-content-center">
+  @for (item of this.weatherForecast()?.data; track item.valid_date) {
+    <div tab-content class="d-flex justify-content-center">
+      <div class="card m-3">
+        <div class="card-body">
+          <h5 class="card-title">Condiciones el {{ item.valid_date }}</h5>
+          <h6>{{ item.weather!.description }}</h6>
+        </div>
+        <ul class="list-group-flush">
+          <li class="list-group-item">Temperatura: {{ item.temp }}</li>
+          <li class="list-group-item">Sensación terminca: {{ item.rh }}</li>
+          <li class="list-group-item">Amancer: {{ item.sunrise_ts }}</li>
+          <li class="list-group-item">Puesta de sol: {{ item.sunset_ts }}</li>
+        </ul>
+      </div>
+    </div>
+  }
+</div>
